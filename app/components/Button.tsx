@@ -20,7 +20,7 @@ export const Button = ({
 	secondary,
 	danger,
 	disabled
-}: ButtonProps): JSX.Element => {
+}: ButtonProps): React.ReactNode => {
 	return (
 		<button
 			onClick={onClick}

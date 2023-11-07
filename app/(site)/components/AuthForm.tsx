@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { Button } from '@/app/components/Button';
 import { Input } from '@/app/components/inputs/Input';
 import { AuthSocialButton } from './AuthSocialButton';
 
 import axios from 'axios';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
@@ -15,9 +16,17 @@ import toast from 'react-hot-toast';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
-export const AuthForm = (): JSX.Element => {
+export const AuthForm = (): React.ReactNode => {
+	const session = useSession();
+	const router = useRouter();
 	const [variant, setVariant] = useState<Variant>('LOGIN');
 	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		if (session?.status === 'authenticated') {
+			router.push('/users');
+		}
+	}, [session?.status, router]);
 
 	const toggleVariant = useCallback(() => {
 		if (variant === 'LOGIN') {
@@ -45,6 +54,7 @@ export const AuthForm = (): JSX.Element => {
 		if (variant === 'REGISTER') {
 			await axios
 				.post('/api/register', data)
+				.then(async () => await signIn('credentials', data))
 				.catch(() => {
 					toast.error('Something went wrong!');
 				})
@@ -64,6 +74,7 @@ export const AuthForm = (): JSX.Element => {
 					}
 					if (callback?.ok && !callback?.error) {
 						toast.success('Logged in!');
+						router.push('/users');
 					}
 				})
 				.finally(() => {
@@ -72,10 +83,27 @@ export const AuthForm = (): JSX.Element => {
 		}
 	};
 
-	const socialAction = (action: string): any => {
+	const socialAction = async (action: string): Promise<void> => {
 		setIsLoading(true);
 
-		// NextAunth
+		await signIn(action, {
+			redirect: false
+		})
+			.then(callback => {
+				if (callback?.error) {
+					toast.error('Invalid Credentials');
+				}
+
+				if (callback?.ok && !callback?.error) {
+					toast.success('Logged in!');
+				}
+			})
+			.catch(e => {
+				toast.error(e);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
 	};
 
 	return (
@@ -136,11 +164,15 @@ export const AuthForm = (): JSX.Element => {
 					<div className='mt-6 flex gap-2'>
 						<AuthSocialButton
 							icon={BsGithub}
-							onClick={() => socialAction('github')}
+							onClick={() => {
+								void socialAction('github');
+							}}
 						/>
 						<AuthSocialButton
 							icon={BsGoogle}
-							onClick={() => socialAction('google')}
+							onClick={() => {
+								void socialAction('google');
+							}}
 						/>
 					</div>
 				</div>

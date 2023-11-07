@@ -8,7 +8,7 @@ interface AuthSocialButtonProps {
 export const AuthSocialButton = ({
 	icon: Icon,
 	onClick
-}: AuthSocialButtonProps): JSX.Element => {
+}: AuthSocialButtonProps): React.ReactNode => {
 	return (
 		<button
 			type='button'

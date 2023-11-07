@@ -25,7 +25,7 @@ export const Input = ({
 	register,
 	errors,
 	disabled
-}: InputProps): JSX.Element => {
+}: InputProps): React.ReactNode => {
 	return (
 		<div>
 			<label
