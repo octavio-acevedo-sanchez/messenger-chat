@@ -5,7 +5,7 @@ import type { User } from '@prisma/client';
 
 const useOtherUser = (
 	conversation: FullConversationType | { users: User[] }
-): User[] => {
+): User => {
 	const session = useSession();
 
 	const otherUser = useMemo(() => {
@@ -15,7 +15,7 @@ const useOtherUser = (
 			user => user.email !== currentUserEmail
 		);
 
-		return otherUser;
+		return otherUser[0];
 	}, [session?.data?.user?.email, conversation.users]);
 
 	return otherUser;
