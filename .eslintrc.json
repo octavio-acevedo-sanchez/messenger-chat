@@ -21,9 +21,17 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
-    "@typescript-eslint/strict-boolean-expressions": "off"
+    "@typescript-eslint/strict-boolean-expressions": "off",
     // "@typescript-eslint/prefer-optional-chain": "off",
     // "@typescript-eslint/explicit-function-return-type": "off",
     // "@typescript-eslint/no-misused-promises": "off"
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ]
   }
 }
