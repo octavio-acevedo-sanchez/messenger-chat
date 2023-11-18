@@ -50,7 +50,8 @@ export const Input = ({
             border-0
             py-1.5
             text-gray-900
-            shadow-smring-1
+            shadow-sm
+						ring-1
             ring-inset
             ring-gray-300
             placeholder:txt-gray-400
