@@ -6,7 +6,8 @@
   "extends": [
     "standard-with-typescript",
     "plugin:react/recommended",
-    "eslint-config-prettier"
+    "eslint-config-prettier",
+    "next"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
